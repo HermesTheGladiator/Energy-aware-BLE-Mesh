@@ -1,11 +1,12 @@
 .. _nrf-system-off-sample:
 
-nRF5x System Off demo
+nRF52832 Power Profiling
 #####################
 
 Overview
 ********
 
+In this sample, we have demonstrated the use of power management library for profiling the power consumption of nRF52-DK board. 
 This sample can be used for basic power measurement and as an example of
 deep sleep on Nordic platforms.  The functional behavior is:
 
@@ -61,3 +62,18 @@ nRF52 core output
    Sleep 2 s
    Sleep 2 s with UART off
    Entering system off; press BUTTON1 to restart
+
+
+We can invoke SYS_INIT(disable_ds_1, PRE_KERNEL_2, 0) to enable DK after bootup into particular state
+
+```
+static int disable_ds_1(struct device *dev)
+{
+   ARG_UNUSED(dev);
+
+   sys_pm_ctrl_disable_state(SYS_POWER_STATE_DEEP_SLEEP_1);
+   return 0;
+}
+
+SYS_INIT(disable_ds_1, PRE_KERNEL_2, 0);
+```
