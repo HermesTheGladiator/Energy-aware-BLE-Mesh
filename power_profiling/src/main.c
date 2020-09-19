@@ -40,6 +40,11 @@ void main(void)
 	//board_init(); //can be only used in SDK
 	printk("After Board Init--> Suspending for %d secs\n",DELAY);
 	k_sleep(K_SECONDS(DELAY));
-	printk("Wakeup\n");
+	
+	/* Restore automatic power management. */
+	printk("\n<-- Forcing %s state --->\n",
+		       STRINGIFY(SYS_POWER_STATE_AUTO));
+	sys_pm_force_power_state(SYS_POWER_STATE_AUTO);
 
+	k_sleep(K_SECONDS(DELAY));
 }

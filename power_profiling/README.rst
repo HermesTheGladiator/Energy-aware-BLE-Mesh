@@ -1,4 +1,4 @@
-.. _nrf-system-off-sample:
+.. _nrf-power-profile:
 
 nRF52832 Power Profiling
 #####################
