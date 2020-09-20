@@ -6,10 +6,10 @@ nRF52832 Power Profiling
 Overview
 ********
 
-In this sample, we have demonstrated the use of power management library for profiling the power consumption of nRF52-DK board. 
-This sample can be used for basic power measurement and as an example of
-deep sleep on Nordic platforms.  The functional behavior is:
+In this sample, the use of power management library and DeviceTree APIs is demonstrated for profiling the power consumption of nRF52-DK board. 
+The functional behaviour is:
 
+* Power-Off all subsystem (UART,MCU Manager) after SYS_INIT()
 * Suspend main() thread after board initialization
 * Force system CPU in ACTIVE state and suspend main() thread for 10 seconds
 * Set device Zephyr_Console into Low-power mode and suspend main() thread for 10 seconds

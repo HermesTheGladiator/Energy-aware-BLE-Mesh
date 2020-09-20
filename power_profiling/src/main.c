@@ -21,6 +21,7 @@
 #define led2 DT_NODELABEL(led2)
 #define led3 DT_NODELABEL(led3)
 
+#define BUTTONS DT_NODELABEL(buttons)
 #define button0 DT_NODELABEL(button0)
 #define button1 DT_NODELABEL(button1)
 #define button2 DT_NODELABEL(button2)
@@ -29,6 +30,14 @@
 #define pwm0 DT_NODELABEL(pwm0)
 
 #define CONSOLE_LABEL DT_LABEL(DT_CHOSEN(zephyr_console))
+#define SHELL_UART DT_LABEL(DT_CHOSEN(zephyr_shell_uart))
+#define MCUMGR DT_LABEL(DT_CHOSEN(zephyr_bt_mon_uart))
+#define BT_MON_UART DT_LABEL(DT_CHOSEN(zephyr_bt_mon_uart))
+#define BT_C2H_UART DT_LABEL(DT_CHOSEN(zephyr_bt_c2h_uart))
+#define SRAM DT_LABEL(DT_CHOSEN(zephyr_sram))
+#define FLASH DT_LABEL(DT_CHOSEN(zephyr_flash))
+#define CODEPART DT_LABEL(DT_CHOSEN(zephyr_code_partition))
+
 
 #define DELAY 10U
 
@@ -65,47 +74,79 @@ static int disable_comps(struct device *dev)
 	rc = device_set_power_state(cons, DEVICE_PM_OFF_STATE, NULL, NULL);
 	printk("zephyr--> zephyr_console OFF");
 	*/
+	struct device *shell_uart = device_get_binding(SHELL_UART);
+	struct device *mcumgr = device_get_binding(MCUMGR);
+	struct device *bt_mon_uart = device_get_binding(BT_MON_UART);
+	struct device *bt_c2h_uart = device_get_binding(BT_C2H_UART);
+	//struct device *sram = device_get_binding(SRAM);
+	struct device *flash = device_get_binding(BT_C2H_UART);
+	int rc;
+
+	rc = device_set_power_state(shell_uart, DEVICE_PM_OFF_STATE, NULL, NULL);
+	printk("\nzephyr --> Shell UART OFF");
+
+	rc = device_set_power_state(mcumgr, DEVICE_PM_OFF_STATE, NULL, NULL);
+	printk("\nzephyr --> MCU MANAGER OFF");
+
+	rc = device_set_power_state(bt_mon_uart, DEVICE_PM_OFF_STATE, NULL, NULL);
+	printk("\nzephyr --> BT MON UART OFF");
+
+	rc = device_set_power_state(bt_c2h_uart, DEVICE_PM_OFF_STATE, NULL, NULL);
+	printk("\nzephyr --> BT C2H UART OFF");
+
+	//rc = device_set_power_state(sram, DEVICE_PM_OFF_STATE, NULL, NULL);
+	//printk("\nzephyr --> SRAM OFF");
+
+	rc = device_set_power_state(flash, DEVICE_PM_OFF_STATE, NULL, NULL);
+	printk("\nzephyr --> FLASH OFF");
+
 	
-	//do nothing
+	
 
 	return 0;
 }
 
-SYS_INIT(disable_comps, PRE_KERNEL_1, 0);
+SYS_INIT(disable_comps, PRE_KERNEL_2, 0);
 
 
 
 void main(void)
 {
-	//board_init(); //can be only used in SDK
-	printk("After Board Init--> Suspending for %d secs",DELAY);
-	k_sleep(K_SECONDS(DELAY));
+	while(true){
 
-	struct device *cons = device_get_binding(CONSOLE_LABEL);
-	// Profiling power consumption for ACTIVE STATE (Constant Latency mode)
-	// device_state defined in enum power_states --> SYS_POWER_STATE_ACTIVE
-	printk("\n<-- Forcing SYS_POWER_STATE_ACTIVE state --->");
-	sys_set_power_state(SYS_POWER_STATE_ACTIVE);
-	printk("\nSYS_POWER_STATE_ACTIVE --> Suspending for %d secs",DELAY);
-	k_sleep(K_SECONDS(DELAY));
+	
 
-	// Profiling power consumption for Low Power state 
-	printk("\n<-- Forcing DEVICE_PM_LOW_POWER_STATE state --->");
-	device_set_power_state(cons, DEVICE_PM_LOW_POWER_STATE, NULL, NULL);
-	printk("\n%s --> Suspending for %d secs",CONSOLE_LABEL,DELAY);
-	k_sleep(K_SECONDS(DELAY));
+	
+		//board_init(); //can be only used in SDK
+		printk("After Board Init --> Suspending for %d secs",DELAY);
+		k_sleep(K_SECONDS(DELAY));
 
-	// Profiling power consumption for POWER OFF STATE 
-	printk("\n<-- Forcing DEVICE_PM_OFF_STATE state --->");
-	device_set_power_state(cons, DEVICE_PM_OFF_STATE, NULL, NULL);
-	printk("\n%s --> Suspending for %d secs",CONSOLE_LABEL,DELAY);
-	k_sleep(K_SECONDS(DELAY));
+		struct device *cons = device_get_binding(CONSOLE_LABEL);
+		// Profiling power consumption for ACTIVE STATE (Constant Latency mode)
+		// device_state defined in enum power_states --> SYS_POWER_STATE_ACTIVE
+		printk("\n<-- Forcing SYS_POWER_STATE_ACTIVE state --->");
+		sys_set_power_state(SYS_POWER_STATE_ACTIVE);
+		printk("\nSYS_POWER_STATE_ACTIVE --> Suspending for %d secs",DELAY);
+		k_sleep(K_SECONDS(DELAY));
+
+		// Profiling power consumption for Low Power state 
+		printk("\n<-- Forcing DEVICE_PM_LOW_POWER_STATE state --->");
+		device_set_power_state(cons, DEVICE_PM_LOW_POWER_STATE, NULL, NULL);
+		printk("\n%s --> Suspending for %d secs",CONSOLE_LABEL,DELAY);
+		k_sleep(K_SECONDS(DELAY));
+
+		// Profiling power consumption for POWER OFF STATE 
+		printk("\n<-- Forcing DEVICE_PM_OFF_STATE state --->");
+		device_set_power_state(cons, DEVICE_PM_OFF_STATE, NULL, NULL);
+		printk("\n%s --> Suspending for %d secs",CONSOLE_LABEL,DELAY);
+		k_sleep(K_SECONDS(DELAY));
 
 
-	//restoring active state
-	printk("\n<-- Forcing DEVICE_PM_ACTIVE_STATE state --->\n");
-	sys_set_power_state(SYS_POWER_STATE_ACTIVE);
-	k_sleep(K_SECONDS(DELAY));
+		//restoring active state
+		printk("\n<-- Forcing DEVICE_PM_ACTIVE_STATE state --->\n");
+		sys_set_power_state(SYS_POWER_STATE_ACTIVE);
+		k_sleep(K_SECONDS(DELAY));
 
 
+	}
 }
