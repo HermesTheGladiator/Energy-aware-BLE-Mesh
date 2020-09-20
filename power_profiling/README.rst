@@ -17,6 +17,11 @@ The functional behaviour is:
 * Override Power Manager Policy to revoke ACTIVE STATE
 
 
+Device Tree APIs
+****************
+The Zephyr project provides peripheral-specific SoC Interface to perform power-managment related operations. The list of peripherals are specific in 
+:code:`~/zephyrproject/zephyr/build/zephyr/zephyr.dts`.
+
 Building, Flashing and Logging
 ******************************
 For building and flashing the sample, copy/extract the power_profiling directory into the given directory and run the following commands:
@@ -27,7 +32,7 @@ For building and flashing the sample, copy/extract the power_profiling directory
    west build -p auto -b nrf52dk_nrf52832 samples/boards/nrf/power_profiling/
    west flash
 
-To view the printk() commands as log messages, open another terminal and execute the following command:
+To view the :code:`printk()` commands as log messages, open another terminal and execute the following command:
 
 .. code-block::
 
