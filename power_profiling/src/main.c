@@ -14,24 +14,64 @@
 
 //#include "board.h"
 
+//Extracting label from devicetree
+// DST given in zephyrproject/zephyr/build/zephyr/zephyr.dst
+#define led0 DT_NODELABEL(led0)
+#define led1 DT_NODELABEL(led1)
+#define led2 DT_NODELABEL(led2)
+#define led3 DT_NODELABEL(led3)
+
+#define button0 DT_NODELABEL(button0)
+#define button1 DT_NODELABEL(button1)
+#define button2 DT_NODELABEL(button2)
+#define button3 DT_NODELABEL(button3)
+
+#define pwm0 DT_NODELABEL(pwm0)
+
+#define CONSOLE_LABEL DT_LABEL(DT_CHOSEN(zephyr_console))
+
 #define DELAY 10U
 
-/* Prevent deep sleep (system off) from being entered on long timeouts
- * or `K_FOREVER` due to the default residency policy.
- *
- * This has to be done before anything tries to sleep, which means
- * before the threading system starts up between PRE_KERNEL_2 and
- * POST_KERNEL.  Do it at the start of PRE_KERNEL_2.
+/* 
+Disabling unrequired components after PRE_KERNEL_1
+execution, that is in PRE_KERNEL_2
  */
-static int disable_ds_1(struct device *dev)
+static int disable_comps(struct device *dev)
 {
-	ARG_UNUSED(dev);
+	/*
+	struct device *pwm = device_get_binding(DT_LABEL(pwm0));
+	struct device *led0 = device_get_binding(DT_LABEL(led0));
+	struct device *led1= device_get_binding(DT_LABEL(led1));
+	struct device *led2 = device_get_binding(DT_LABEL(led2));
+	struct device *led3 = device_get_binding(DT_LABEL(led3));
 
-	sys_pm_ctrl_disable_state(SYS_POWER_STATE_DEEP_SLEEP_1);
+	struct device *button0 = device_get_binding(DT_LABEL(button0));
+	struct device *button1 = device_get_binding(DT_LABEL(button1));
+	struct device *button2 = device_get_binding(DT_LABEL(button2));
+	struct device *button3 = device_get_binding(DT_LABEL(button3));
+	struct device *button4= device_get_binding(DT_LABEL(button4));
+	
+	rc = device_set_power_state(led0, DEVICE_PM_ACTIVE_STATE, NULL, NULL);
+	printk("disabling zephyre_dts --> led0");
+	rc = device_set_power_state(led1, DEVICE_PM_ACTIVE_STATE, NULL, NULL);
+	printk("disabling zephyre_dts --> led1");
+	rc = device_set_power_state(led2, DEVICE_PM_ACTIVE_STATE, NULL, NULL);
+	printk("disabling zephyre_dts --> led2");
+	rc = device_set_power_state(led3, DEVICE_PM_ACTIVE_STATE, NULL, NULL);
+	printk("disabling zephyre_dts --> led3");
+
+	struct device *cons = device_get_binding(CONSOLE_LABEL);
+	int rc;
+	rc = device_set_power_state(cons, DEVICE_PM_OFF_STATE, NULL, NULL);
+	printk("zephyr--> zephyr_console OFF");
+	*/
+	
+	//do nothing
+
 	return 0;
 }
 
-SYS_INIT(disable_ds_1, PRE_KERNEL_2, 0);
+SYS_INIT(disable_comps, PRE_KERNEL_1, 0);
 
 
 
@@ -40,11 +80,36 @@ void main(void)
 	//board_init(); //can be only used in SDK
 	printk("After Board Init--> Suspending for %d secs\n",DELAY);
 	k_sleep(K_SECONDS(DELAY));
-	
-	/* Restore automatic power management. */
-	printk("\n<-- Forcing %s state --->\n",
-		       STRINGIFY(SYS_POWER_STATE_AUTO));
-	sys_pm_force_power_state(SYS_POWER_STATE_AUTO);
 
+	struct device *cons = device_get_binding(CONSOLE_LABEL);
+	// Profiling power consumption for ACTIVE STATE (Constant Latency mode)
+	// device_state defined in enum power_states --> SYS_POWER_STATE_ACTIVE
+	printk("\n<-- Forcing %s state --->\n",
+		       STRINGIFY(SYS_POWER_STATE_ACTIVE));
+	sys_set_power_state(SYS_POWER_STATE_ACTIVE);
+	printk("\n%s --> Suspending for %d secs\n",STRINGIFY(SYS_POWER_STATE_ACTIVE),DELAY);
 	k_sleep(K_SECONDS(DELAY));
+
+	// Profiling power consumption for Low Power state 
+	printk("\n<-- Forcing %s state --->\n",
+		       STRINGIFY(DEVICE_PM_LOW_POWER_STATE));
+	device_set_power_state(cons, DEVICE_PM_LOW_POWER_STATE, NULL, NULL);
+	printk("\n%s --> Suspending for %d secs\n",STRINGIFY(DEVICE_PM_LOW_POWER_STATE),DELAY);
+	k_sleep(K_SECONDS(DELAY));
+
+	// Profiling power consumption for POWER OFF STATE 
+	printk("\n<-- Forcing %s state --->\n",
+		       STRINGIFY(DEVICE_PM_OFF_STATE));
+	device_set_power_state(cons, DEVICE_PM_OFF_STATE, NULL, NULL);
+	printk("\n%s --> Suspending for %d secs\n",STRINGIFY(DEVICE_PM_OFF_STATE),DELAY);
+	k_sleep(K_SECONDS(DELAY));
+
+
+	//restoring active state
+	printk("\n<-- Forcing %s state --->\n",
+		       STRINGIFY(DEVICE_PM_ACTIVE_STATE));
+	sys_set_power_state(DEVICE_PM_ACTIVE_STATE);
+	k_sleep(K_SECONDS(DELAY));
+
+
 }
