@@ -17,14 +17,23 @@ deep sleep on Nordic platforms.  The functional behavior is:
 * Override Power Manager Policy to revoke ACTIVE STATE
 
 
-Building, Flashing and Running
+Building, Flashing and Logging
 ******************************
+.. code-block:: shell
 
-.. cd ~/zephyrproject/zephyr::
-   :zephyr-app: samples/boards/nrf52/system_off
-   :board: nrf52dk_nrf52832
-   :goals: build flash
-   :compact:
+cd ~/zephyrproject/zephyr
+west build -p auto -b nrf52dk_nrf52832 samples/boards/nrf/power_profiling/
+west flash
+
+
+.. code-block:: shell
+
+JLinkRTTLogger -Device NRF52840_XXAA -RTTChannel 1 -if SWD -Speed 4000 ~/rtt.log
+
+
+.. code-block:: shell
+nc localhost 19021
+
 
 
 Sample Output
