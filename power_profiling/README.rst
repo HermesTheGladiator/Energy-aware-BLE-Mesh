@@ -43,16 +43,22 @@ In another terminal, execute the following command:
 
 Sample Output
 =================
-nRF52 core output
+nRF52 JLink RTT Viewer output
 -----------------
 
 .. code-block:: console
 
-   *** Booting Zephyr OS build v2.3.0-rc1-204-g5f2eb85f728d  ***
+   SEGGER J-Link V6.82b - Real time terminal output
+   J-Link OB-SAM3U128-V2-NordicSemi compiled Mar 17 2020 14:43:00 V1.0, SN=682885846
+   Process: JLinkRTTLoggerExe
+   *** Booting Zephyr OS build zephyr-v2.3.0-1342-g75949f470f56  ***
+   After Board Init--> Suspending for 10 secs
+   <-- Forcing SYS_POWER_STATE_ACTIVE state --->
+   SYS_POWER_STATE_ACTIVE --> Suspending for 10 secs
+   <-- Forcing DEVICE_PM_LOW_POWER_STATE state --->
+   UART_0 --> Suspending for 10 secs
+   <-- Forcing DEVICE_PM_OFF_STATE state --->
+   UART_0 --> Suspending for 10 secs
+   <-- Forcing DEVICE_PM_ACTIVE_STATE state --->
 
-   nrf52dk_nrf52832 system off demo
-   Busy-wait 2 s
-   Busy-wait 2 s with UART off
-   Sleep 2 s
-   Sleep 2 s with UART off
-   Entering system off; press BUTTON1 to restart
+
