@@ -23,20 +23,20 @@ For building and flashing the sample, copy/extract the power_profiling directory
 
 .. code-block::
 
-cd ~/zephyrproject/zephyr
-west build -p auto -b nrf52dk_nrf52832 samples/boards/nrf/power_profiling/
-west flash
+   cd ~/zephyrproject/zephyr
+   west build -p auto -b nrf52dk_nrf52832 samples/boards/nrf/power_profiling/
+   west flash
 
 To view the printk() commands as log messages, open another terminal and execute the following command:
 
 .. code-block::
 
-JLinkRTTLogger -Device NRF52840_XXAA -RTTChannel 1 -if SWD -Speed 4000 ~/rtt.log
+   JLinkRTTLogger -Device NRF52840_XXAA -RTTChannel 1 -if SWD -Speed 4000 ~/rtt.log
 
 In another terminal, execute the following command:
 
 .. code-block::
-nc localhost 19021
+   nc localhost 19021
 
 
 
