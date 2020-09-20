@@ -36,6 +36,7 @@ To view the printk() commands as log messages, open another terminal and execute
 In another terminal, execute the following command:
 
 .. code-block::
+
    nc localhost 19021
 
 
