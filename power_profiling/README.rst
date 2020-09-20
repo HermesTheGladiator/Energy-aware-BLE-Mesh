@@ -19,19 +19,19 @@ deep sleep on Nordic platforms.  The functional behavior is:
 
 Building, Flashing and Logging
 ******************************
-.. code-block:: shell
+::
 
 cd ~/zephyrproject/zephyr
 west build -p auto -b nrf52dk_nrf52832 samples/boards/nrf/power_profiling/
 west flash
 
 
-.. code-block:: shell
+::
 
 JLinkRTTLogger -Device NRF52840_XXAA -RTTChannel 1 -if SWD -Speed 4000 ~/rtt.log
 
 
-.. code-block:: shell
+::
 nc localhost 19021
 
 
