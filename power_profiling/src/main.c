@@ -114,36 +114,51 @@ void main(void)
 {
 	while(true){
 
-	
-
-	
-		//board_init(); //can be only used in SDK
-		printk("After Board Init --> Suspending for %d secs",DELAY);
+		
+		printk("### After Board Init --> Suspending for %d secs",DELAY);
 		k_sleep(K_SECONDS(DELAY));
 
 		struct device *cons = device_get_binding(CONSOLE_LABEL);
+
+
 		// Profiling power consumption for ACTIVE STATE (Constant Latency mode)
 		// device_state defined in enum power_states --> SYS_POWER_STATE_ACTIVE
-		printk("\n<-- Forcing SYS_POWER_STATE_ACTIVE state --->");
+		printk("\n <-- Forcing SYS_POWER_STATE_ACTIVE state --->");
 		sys_set_power_state(SYS_POWER_STATE_ACTIVE);
-		printk("\nSYS_POWER_STATE_ACTIVE --> Suspending for %d secs",DELAY);
+		printk("\n SYS_POWER_STATE_ACTIVE --> Suspending for %d secs",DELAY);
 		k_sleep(K_SECONDS(DELAY));
 
-		// Profiling power consumption for Low Power state 
-		printk("\n<-- Forcing DEVICE_PM_LOW_POWER_STATE state --->");
-		device_set_power_state(cons, DEVICE_PM_LOW_POWER_STATE, NULL, NULL);
-		printk("\n%s --> Suspending for %d secs",CONSOLE_LABEL,DELAY);
+		// Profiling power consumption for Deep Sleep state 
+		printk("\n <-- Forcing SYS_POWER_STATE_SLEEP_1 state --->");
+		sys_set_power_state(SYS_POWER_STATE_DEEP_SLEEP_1);
+		printk("\n SYS_POWER_STATE_SLEEP_1 --> Suspending for %d secs",DELAY);
 		k_sleep(K_SECONDS(DELAY));
+
+		/*
+		// Profiling power consumption for Deep Sleep state 
+		printk("\n <-- Forcing SYS_POWER_STATE_DEEP_SLEEP_1 state --->");
+		sys_set_power_state(SYS_POWER_STATE_DEEP_SLEEP_1);
+		printk("\n SYS_POWER_STATE_SLEEP_1 --> Suspending for %d secs",DELAY);
+		k_sleep(K_SECONDS(DELAY));
+		/*
+
+		/*
+		// Profiling power consumption for Low Power state 
+		printk("\n <-- Forcing DEVICE_PM_LOW_POWER_STATE state --->");
+		device_set_power_state(cons, DEVICE_PM_LOW_POWER_STATE, NULL, NULL);
+		printk("\n %s --> Suspending for %d secs",CONSOLE_LABEL,DELAY);
+		k_sleep(K_SECONDS(DELAY));
+		*/
 
 		// Profiling power consumption for POWER OFF STATE 
-		printk("\n<-- Forcing DEVICE_PM_OFF_STATE state --->");
+		printk("\n <-- Forcing DEVICE_PM_OFF_STATE state --->");
 		device_set_power_state(cons, DEVICE_PM_OFF_STATE, NULL, NULL);
-		printk("\n%s --> Suspending for %d secs",CONSOLE_LABEL,DELAY);
+		printk("\n %s --> Suspending for %d secs",CONSOLE_LABEL,DELAY);
 		k_sleep(K_SECONDS(DELAY));
 
 
 		//restoring active state
-		printk("\n<-- Forcing DEVICE_PM_ACTIVE_STATE state --->\n");
+		printk("\n <-- Forcing DEVICE_PM_ACTIVE_STATE state --->\n");
 		sys_set_power_state(SYS_POWER_STATE_ACTIVE);
 		k_sleep(K_SECONDS(DELAY));
 
