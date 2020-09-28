@@ -1,26 +1,11 @@
 .. _nrf-system-off-sample:
 
-nRF5x System Off demo
+nRF52832 Deep Sleep Exit Demo using GPIO BSP Interrupt
 #####################
 
 Overview
 ********
-
-This sample can be used for basic power measurement and as an example of
-deep sleep on Nordic platforms.  The functional behavior is:
-
-* Busy-wait for 2 seconds
-* Sleep for 2 seconds without device power control
-* Sleep for 2 seconds after turning UART off, which reduces current draw
-  by a couple hundred uA
-* Turn the system off after enabling wakeup through a button press
-
-A power monitor will be able to distinguish among these states.
-
-This sample also demonstrates the use of a :c:func:`SYS_INIT()` call to
-disable the deep sleep functionality before the kernel starts, which
-prevents the board from powering down during initialization of drivers
-that use unbounded delays to wait for startup.
+In this sample, a wakeup procedure from SYS_POWER_STATE_DEEP_SLEEP_1 is demonstrated using GPIO pin interrupt. First, the nR
 
 Requirements
 ************
